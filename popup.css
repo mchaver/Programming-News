@@ -1,0 +1,112 @@
+body {
+  width: 450px;
+}
+
+#messagebox {
+    display: block;
+    position: fixed;
+    left: 50%;
+    margin-left: -75px;
+    top: 25%;
+    z-index: 1002;
+    background-color: #F9EDBE;
+    border: 1px solid #F0C3BD;
+    font-family: Tahoma, Geneva, sans-serif;
+    padding: 5px 10px 5px 10px;
+}
+
+.hide-messagebox {
+    display: none !important;
+}
+
+/*The row at the top of the pop up. Contains Hacker News and Reddit.*/
+.tab-row {
+  display: block;
+  width: 450px;
+}
+
+.tab-img {
+  height: 30px; 
+  width: 30px;
+  cursor: pointer;
+}
+
+.bookmark-img {
+  height: 30px; 
+  width: 30px;
+  float: right;
+  cursor: pointer;
+}
+
+/*The list of links below the tab row.*/
+.link-list {
+  list-style-type: none;
+  padding: 0; 
+  margin: 0;
+}
+
+.hide-list {
+  display: none;
+}
+
+.link-list-row {
+
+}
+
+.site-link {
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+  width: 300px;
+  padding: 15px 0px 15px 0px;
+  vertical-align: top;
+}
+
+.comments-link {
+  display: inline-block;
+  width: 100px;
+  font-size: 10px;
+  text-decoration: none;
+  /*float: right;*/
+  text-align: right;
+  padding: 15px 0px 15px 0px;
+  vertical-align: top;
+}
+
+.add-bookmark {
+  display: inline-block;
+  width: 50px;
+  font-size: 12px;
+  text-decoration: none;
+  text-align: center;
+  padding: 15px 0px 15px 0px;
+  cursor: pointer;
+}
+
+.delete-bookmark {
+  display: inline-block;
+  width: 50px;
+  font-size: 12px;
+  text-decoration: none;
+  text-align: center;
+  padding: 15px 0px 15px 0px;
+  cursor: pointer;
+}
+
+.highlight-link {
+  background-color: #f6f6ef;
+  /*#E6F4FA*/
+}
+
+.highlight-hacker-news-link {
+  background-color: #f6f6ef;
+}
+
+.highlight-reddit-link {
+  /*background-color: #E6F4FA;*/
+  background-color: #CEE3F8;
+}
+
+.highlight-add-bookmark {
+  /*background-color: ;*/
+}
