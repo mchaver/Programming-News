@@ -1,22 +1,56 @@
 body {
   width: 450px;
+  min-height: 300px;
+  background-color: black;
+  color: #CCCCCC;
+  font-family: Courier;
 }
 
 #messagebox {
-    display: block;
+    display: none;
     position: fixed;
-    left: 50%;
-    margin-left: -75px;
+    left: 25%;
+    width: 225px;
     top: 25%;
     z-index: 1002;
-    background-color: #F9EDBE;
-    border: 1px solid #F0C3BD;
+    background-color: black;
+    border: 1px solid #39B54A;
+    color: #39B54A;
+    font-family: Courier;
+    padding: 5px 10px 5px 10px;
+}
+
+#okbox {
+    display: none;
+    position: fixed;
+    left: 25%;
+    width: 225px;
+    top: 25%;
+    z-index: 1002;
+    background-color: black;
+    border: 1px solid #39B54A;
+    color: #39B54A;
     font-family: Tahoma, Geneva, sans-serif;
     padding: 5px 10px 5px 10px;
 }
 
-.hide-messagebox {
-    display: none !important;
+#okbox-buttons {
+    display: inline-block;
+    float: right;
+    margin: 10px 0px 10px 0px;
+}
+
+#okbox-cancel {
+    display: inline-block;
+    border: 1px solid #39B54A;
+    cursor: pointer;
+    margin: 0px 10px 0px 0px
+}
+
+#okbox-delete-all {
+    display: inline-block;
+    border: 1px solid #39B54A;
+    cursor: pointer;
 }
 
 /*The row at the top of the pop up. Contains Hacker News and Reddit.*/
@@ -29,18 +63,36 @@ body {
   height: 30px; 
   width: 30px;
   cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.bookmark-img {
+#tab-title {
+  font-size: 28px;
+  color: #39B54A;
+  margin: 0px 0px 0px 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tab-row-right {
+  float: right;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.tab-right-img {
   height: 30px; 
   width: 30px;
-  float: right;
   cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /*The list of links below the tab row.*/
 .link-list {
   list-style-type: none;
+  color: #5FBA3D;
   padding: 0; 
   margin: 0;
 }
@@ -62,6 +114,14 @@ body {
   vertical-align: top;
 }
 
+.site-link:link {
+  color: #39B54A;
+}
+
+.site-link:visited {
+  color: #CCCCCC;
+}
+
 .comments-link {
   display: inline-block;
   width: 100px;
@@ -71,6 +131,14 @@ body {
   text-align: right;
   padding: 15px 0px 15px 0px;
   vertical-align: top;
+}
+
+.comments-link:link {
+  color: #39B54A;
+}
+
+.comments-link:visited {
+  color: #CCCCCC;
 }
 
 .add-bookmark {
@@ -93,20 +161,23 @@ body {
   cursor: pointer;
 }
 
+#delete-all-bookmarks {
+  margin: 15px 0px 10px 0px;
+  cursor: pointer;
+  float: right;
+  border: solid 1px #39B54A;
+}
+
 .highlight-link {
-  background-color: #f6f6ef;
-  /*#E6F4FA*/
+  background-color: #F2F2F2;
+  color: black !important;
 }
 
-.highlight-hacker-news-link {
-  background-color: #f6f6ef;
-}
-
-.highlight-reddit-link {
-  /*background-color: #E6F4FA;*/
-  background-color: #CEE3F8;
-}
-
-.highlight-add-bookmark {
-  /*background-color: ;*/
+#cursor-popup {
+    display: none;
+    position: absolute;
+    background-color: #39B54A;
+    color: #F2F2F2;
+    border: solid 1px #F2F2F2; 
+    z-index: 1003;
 }

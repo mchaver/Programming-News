@@ -1,4 +1,7 @@
-//
+Array.prototype.move = function(from, to) {
+    this.splice(to, 0, this.splice(from, 1)[0]);
+};
+
 function parseWebsite(url, dataProcessingFunc, callback) {
   var html = '';
   $.ajax({
@@ -75,7 +78,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   var now = new Date();
   if (request.timeSinceUpdate) {
     if (request.site == 'hackernews') {
-      if (typeof hnLastUpdate === 'undefined' || (((now - hnLastUpdate)/1000/60) >= 10)) {
+      if (request.reload || typeof hnLastUpdate === 'undefined' || (((now - hnLastUpdate)/1000/60) >= 10)) {
         hnNeedsUpdate = true;
         hnLastUpdate = new Date();
       } else {
@@ -83,7 +86,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
       }
       sendResponse({needsUpdate: hnNeedsUpdate});
     } else if (request.site == 'reddit') {
-      if (typeof redditLastUpdate === 'undefined' || (((now - redditLastUpdate)/1000/60) >= 10)) {
+      if (request.reload || typeof redditLastUpdate === 'undefined' || (((now - redditLastUpdate)/1000/60) >= 10)) {
         redditNeedsUpdate = true;
         redditLastUpdate = new Date();
       } else {
@@ -124,6 +127,19 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 
+function containsBookmark(bookmarks, newBookmark) {
+  var index = -1;
+  for (var i = 0; i < bookmarks.length; i++) {
+    if (bookmarks[i].site == newBookmark.site &&
+        bookmarks[i].siteLink == newBookmark.siteLink &&
+        bookmarks[i].comments == newBookmark.comments &&
+        bookmarks[i].commentsLink == newBookmark.commentsLink) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
 //bookmarks
 function addBookmark(data, callback) {
   //chrome.storage.sync.clear();
@@ -133,10 +149,24 @@ function addBookmark(data, callback) {
     } else {
       bookmarks = JSON.parse(bookmarks.programmingNewsLinks);
     }
-    bookmarks.unshift(data);
+    
+    var from = containsBookmark(bookmarks, data);
+    var result = "";
+    if (from >= 0) {
+        bookmarks.move(from, 0);
+        result = "moved";
+    } else {
+        bookmarks.unshift(data);
+        if (bookmarks.length > 100) {
+          bookmarks.pop();
+          result = "addAndPop";
+        } else {
+          result = "added";
+        }
+    }
+    
     chrome.storage.sync.set({'programmingNewsLinks': JSON.stringify(bookmarks)}, function() {
-      //send data to popup
-      callback('hello');
+      callback(result);
     });  
   });
 }
@@ -176,12 +206,12 @@ function getBookmarks(callback) {
       bookmarks = JSON.parse(bookmarks.programmingNewsLinks);
       bookmarks.forEach(function(bookmark, index) {
         var newElement = '<li class="link-list-row"><a href="' + bookmark.siteLink + '" class="site-link">' + bookmark.site + '</a>';
-        newElement += '<a href="' + 'http://news.ycombinator.com/' + bookmark.commentsLink + '" class="comments-link">' + bookmark.comments + '</a>';
+        newElement += '<a href="' + bookmark.commentsLink + '" class="comments-link">' + bookmark.comments + '</a>';
         newElement += '<span class="delete-bookmark" data-index="' + index + '">delete</span></li>';
         finalHtml += newElement;
       });
     }
-    finalHtml += '<li class="link-list-row"><span class="delete-all-bookmarks">Delete all bookmarks?</span></ul>';
+    finalHtml += '<li class="link-list-row"><span id="delete-all-bookmarks">Delete all items</span></ul>';
     callback(finalHtml);
   });
 }
@@ -190,8 +220,8 @@ function getBookmarks(callback) {
 chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.bookmarkAction) {
     if (request.bookmarkAction == 'addBookmark') {
-       addBookmark(request.bookmark, function(bookmarks) {
-         sendResponse({bookmarks: bookmarks});
+       addBookmark(request.bookmark, function(result) {
+         sendResponse({result: result});
        });
     } else if (request.bookmarkAction == 'deleteBookmark') {
       deleteBookmark(request.index, function(deleted) {
