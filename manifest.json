@@ -21,7 +21,7 @@
     },
     "permissions": [ 
       "storage",
-      "http://news.ycombinator.com/*",
+      "https://news.ycombinator.com/*",
       "http://www.reddit.com/r/programming"
     ]
 }

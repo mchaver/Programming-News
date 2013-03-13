@@ -1,6 +1,18 @@
 var bkg = chrome.extension.getBackgroundPage();
 var current = 'HackerNews';
 
+function reloadTab() {
+  chrome.extension.sendMessage({requestTab: true} , function(response) {
+    if (response.currentTab == 'HackerNews') {
+      getHackerNews();
+    } else if (response.currentTab == 'Reddit') {
+      getReddit();
+    } else if (response.currentTab == 'ReadingList') {
+      getBookmarks();
+    }
+  });
+}
+
 function setShortMessage(message) {
   $('#messagebox').text(message);
   $('#messagebox').finish().show().fadeOut(4500);
@@ -142,7 +154,7 @@ function showDeleteAllBookmarks() {
 $('#okbox-cancel').click(function(){$('#okbox').hide();});
 $('#okbox-delete-all').click(deleteAllBookmarks);
 
-getHackerNews();
+reloadTab();
 $('#hacker-news-logo').click(function(){getHackerNews(false);});
 $('#reddit-logo').click(function(){getReddit(false);});
 $('#reading-list-logo').click(getBookmarks);

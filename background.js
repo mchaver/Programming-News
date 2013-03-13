@@ -2,6 +2,8 @@ Array.prototype.move = function(from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
+var currentTab = 'HackerNews';
+
 function parseWebsite(url, dataProcessingFunc, callback) {
   var html = '';
   $.ajax({
@@ -13,8 +15,8 @@ function parseWebsite(url, dataProcessingFunc, callback) {
       html = dataProcessingFunc(data);
       callback(html);
     },
-    error : function(data) {
-      html = '<li class"link-list-row">Unable to connect to <a href="' + url + '">Hacker News</a> at the moment.</li>';
+    error : function(xhr, textStatus, errorThrown) {
+      html = '<li class"link-list-row">Unable to connect to the website at the moment.</li>';
       callback(html);
     }
   });
@@ -104,8 +106,9 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
   now = new Date();
   if (request.tabRequest) {
     if (request.tabRequest == 'hackernews') {
+      currentTab = 'HackerNews';
       if (hnNeedsUpdate) {
-        parseWebsite('http://news.ycombinator.com/news', scrapeHackerNews, function(html) {
+        parseWebsite('https://news.ycombinator.com/', scrapeHackerNews, function(html) {
           hackerNewsHtml = html;
           sendResponse({html: hackerNewsHtml});
         });
@@ -113,6 +116,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
         sendResponse({html: hackerNewsHtml});
       }
     } else if (request.tabRequest == 'reddit') {
+      currentTab = 'Reddit';
       if (redditNeedsUpdate) {
         parseWebsite('http://www.reddit.com/r/programming', scrapeReddit, function(html) {
           redditHtml = html;
@@ -235,7 +239,15 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
       getBookmarks(function(html) {
          sendResponse({html: html});
       });
+      currentTab = 'ReadingList';
     }
+  }
+  return true;
+});
+
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.requestTab) {
+    sendResponse({currentTab: currentTab});
   }
   return true;
 });
